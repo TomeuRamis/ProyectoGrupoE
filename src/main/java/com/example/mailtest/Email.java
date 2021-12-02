@@ -3,12 +3,13 @@ package com.example.mailtest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 public class Email {
 
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private JavaMailSender javaMailSender = new JavaMailSenderImpl();
 
     /*
     Envia un email a "enricplanas2@gmail.com
@@ -22,7 +23,5 @@ public class Email {
         msg.setText("El contenido de la web es distinto");
 
         javaMailSender.send(msg);
-
-
     }
 }
