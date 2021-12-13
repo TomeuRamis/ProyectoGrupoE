@@ -1,27 +1,84 @@
 package com.example.mailtest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class Email {
+    //@Autowired
+    //private JavaMailSender javaMailSender = new JavaMailSenderImpl();
 
-
-    @Autowired
-    private JavaMailSender javaMailSender = new JavaMailSenderImpl();
-
-    /*
-    Envia un email a "enricplanas2@gmail.com
-    */
+    /*Envia un email a "bartomeuramis99@gmail.com */
     public void sendEmail() {
 
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo("enricplanas2@gmail.com");
+        //Quien es el destinatario
+        String to = "bartomeuramis99@gmail.com";
+
+        //Quien lo envia
+        String from = "tt3962428@gmail.com";
+
+        // gmails smtp
+        String host = "smtp.gmail.com";
+
+        // Get system properties
+        Properties properties = System.getProperties();
+
+        // Setup mail server
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+
+        // Get the Session object.// and pass username and password
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+            protected PasswordAuthentication getPasswordAuthentication() {
+
+                return new PasswordAuthentication("tt3962428@gmail.com", "tesT1234");
+
+            }
+
+        });
+
+        // Used to debug SMTP issues
+        session.setDebug(true);
+
+        try {
+            // Create a default MimeMessage object.
+            MimeMessage message = new MimeMessage(session);
+
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+
+            // Set To: header field of the header.
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+            // Set Subject: header field
+            message.setSubject("¡Se han encontrado cambios en tu página web!");
+
+            // Now set the actual message
+            message.setText("Hemos encontrado varios cambios en la página web que indicaste.");
+
+            System.out.println("sending...");
+            // Send message
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
+
+        /*SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo("bartomeuramis99@gmail.com");
 
         msg.setSubject("Snapshot distintas");
         msg.setText("El contenido de la web es distinto");
 
-        javaMailSender.send(msg);
+        javaMailSender.send(msg);*/
     }
 }
